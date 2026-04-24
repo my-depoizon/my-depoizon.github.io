@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Portfolio futuristik Depoizon - Nur Riski Firdaus, builder komunitas, software engineer, AI explorer, dan digital innovator.">
+    <title>Depoizon | Futuristic Digital Portfolio</title>
+    <link rel="icon" type="image/png" href="https://h.top4top.io/p_3765hrnla1.png">
+    <link rel="shortcut icon" type="image/png" href="https://h.top4top.io/p_3765hrnla1.png">
+    <link rel="apple-touch-icon" href="https://h.top4top.io/p_3765hrnla1.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="loader" aria-label="Memuat website">
+        <div class="loader-orbit">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <p>Initializing Depoizon Interface</p>
+    </div>
+
+    <div class="cursor-dot" aria-hidden="true"></div>
+    <div class="cursor-ring" aria-hidden="true"></div>
+
+    <canvas id="particleCanvas" aria-hidden="true"></canvas>
+    <div class="ambient-layer" aria-hidden="true">
+        <span class="light light-a"></span>
+        <span class="light light-b"></span>
+        <span class="light light-c"></span>
+        <span class="glass-line line-a"></span>
+        <span class="glass-line line-b"></span>
+    </div>
+
+    <header class="site-header" id="top">
+        <nav class="navbar glass-panel" aria-label="Navigasi utama">
+            <a class="brand" href="#hero" aria-label="Depoizon Home">
+                <span class="brand-mark">D</span>
+                <span>Depoizon</span>
+            </a>
+            <button class="nav-toggle" aria-label="Buka menu navigasi" aria-expanded="false">
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links">
+                <a href="#about">Tentang</a>
+                <a href="#timeline">Timeline</a>
+                <a href="#skills">Keahlian</a>
+                <a href="#projects">Proyek</a>
+                <a href="#explore">Hobi</a>
+                <a href="#community">Komunitas</a>
+                <a href="#contact">Kontak</a>
+            </div>
+            <div class="nav-quick" aria-label="Quick links">
+                <a class="tooltip-link" href="https://github.com/depoizon" target="_blank" rel="noopener noreferrer"
+                    data-tooltip="GitHub">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path
+                            d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.04 1.53 1.04.9 1.52 2.35 1.08 2.92.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0 1 12 6.01c.85 0 1.7.11 2.5.34 1.9-1.29 2.74-1.02 2.74-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z" />
+                    </svg>
+                </a>
+                <a class="tooltip-link" href="mailto:uwudepoistn@gmail.com" data-tooltip="Email">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 6h16v12H4V6Zm0 1 8 6 8-6" />
+                    </svg>
+                </a>
+                <a class="tooltip-link" href="http://mail.depoizon.my.id/" target="_blank" rel="noopener noreferrer"
+                    data-tooltip="Web Mail">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path
+                            d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm-8 9h16M12 3c2.2 2.4 3.3 5.4 3.3 9S14.2 18.6 12 21M12 3C9.8 5.4 8.7 8.4 8.7 12s1.1 6.6 3.3 9" />
+                    </svg>
+                </a>
+                <a class="tooltip-link" href="https://lynk.id/kyyca" target="_blank" rel="noopener noreferrer"
+                    data-tooltip="Toko Saya">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6 8h12l-1 13H7L6 8Zm3 0a3 3 0 0 1 6 0M4 8h16M9 13h6" />
+                    </svg>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero section" id="hero">
+            <div class="hero-grid">
+                <div class="hero-copy reveal">
+                    <div class="hero-program glass-panel reveal" aria-label="Status program waktu">
+                        <div class="program-pill">
+                            <span class="program-dot"></span>
+                            <span id="greetingLabel">Selamat Datang</span>
+                        </div>
+                        <div class="program-meta">
+                            <strong id="timeLabel">00:00 WIB</strong>
+                            <span id="dateLabel">Memuat waktu Jakarta</span>
+                        </div>
+                    </div>
+                    <span class="eyebrow">Portfolio Digital Futuristik</span>
+                    <h1>
+                        Depoizon
+                        <span class="gradient-text typing-text"
+                            data-typing='["Community Builder", "Software Engineer", "AI Explorer", "Tool Developer", "Digital Innovator"]'>Digital
+                            Innovator</span>
+                    </h1>
+                    <p class="hero-lead">
+                        Nur Riski Firdaus membangun ekosistem digital dari Madura untuk dunia:
+                        komunitas, sistem modern, eksplorasi AI, tools produktif, dan rekayasa
+                        software yang fokus pada dampak nyata.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn primary magnetic" href="https://github.com/depoizon" target="_blank"
+                            rel="noopener noreferrer">
+                            <span>GitHub Saya</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.04 1.53 1.04.9 1.52 2.35 1.08 2.92.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0 1 12 6.01c.85 0 1.7.11 2.5.34 1.9-1.29 2.74-1.02 2.74-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z" />
+                            </svg>
+                        </a>
+                        <a class="btn glass magnetic" href="http://mail.depoizon.my.id/" target="_blank"
+                            rel="noopener noreferrer">
+                            <span>Web Mail</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm-8 9h16M12 3c2.2 2.4 3.3 5.4 3.3 9S14.2 18.6 12 21M12 3C9.8 5.4 8.7 8.4 8.7 12s1.1 6.6 3.3 9" />
+                            </svg>
+                        </a>
+                        <a class="btn secondary magnetic" href="mailto:uwudepoistn@gmail.com">
+                            <span>Hubungi Saya</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M4 6h16v12H4V6Zm0 1 8 6 8-6" />
+                            </svg>
+                        </a>
+                        <a class="btn glass magnetic" href="https://lynk.id/kyyca" target="_blank"
+                            rel="noopener noreferrer">
+                            <span>Toko Saya</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M6 8h12l-1 13H7L6 8Zm3 0a3 3 0 0 1 6 0M4 8h16M9 13h6" />
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="hero-mini-actions" aria-label="Navigasi portfolio">
+                        <a href="#timeline">Lihat Pencapaian</a>
+                        <a href="#projects">Jelajahi Portfolio</a>
+                    </div>
+                    <div class="alias-marquee glass-panel reveal" aria-label="Nama samaran berjalan">
+                        <div class="alias-track">
+                            <div class="alias-group">
+                                <span>Mr.Haqi</span>
+                                <span>Mr Spons</span>
+                                <span>Mrs T****</span>
+                                <span>Depoizon</span>
+                            </div>
+                            <div class="alias-group" aria-hidden="true">
+                                <span>Mr.Haqi</span>
+                                <span>Mr Spons</span>
+                                <span>Mrs T****</span>
+                                <span>Depoizon</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-strip glass-panel">
+                        <div>
+                            <strong>Nama Asli</strong>
+                            <span>Nur Riski Firdaus</span>
+                        </div>
+                        <div>
+                            <strong>Lokasi</strong>
+                            <span>Sumenep, Madura, Jawa Timur</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-visual reveal">
+                    <div class="robot-stage glass-panel tilt-card" id="robotStage">
+                        <div class="robot-halo"></div>
+                        <div class="robot" id="robot" aria-label="Robot asisten digital Depoizon">
+                            <div class="robot-antenna">
+                                <span></span>
+                            </div>
+                            <div class="robot-head">
+                                <div class="robot-face">
+                                    <div class="eye eye-left"><span class="pupil"></span></div>
+                                    <div class="eye eye-right"><span class="pupil"></span></div>
+                                    <div class="robot-smile"></div>
+                                </div>
+                                <div class="ear ear-left"></div>
+                                <div class="ear ear-right"></div>
+                            </div>
+                            <div class="robot-neck"></div>
+                            <div class="robot-body">
+                                <button class="core" id="robotCore" type="button"
+                                    aria-label="Tekan core robot tiga kali untuk mengaktifkan mode marah"
+                                    aria-pressed="false"></button>
+                                <div class="panel-lines"></div>
+                            </div>
+                        </div>
+                        <div class="robot-caption">
+                            <span class="status-dot"></span>
+                            <span class="robot-status-text">Digital Assistant Online</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-band section-mini reveal" aria-label="Statistik profil">
+            <div class="stat-card glass-panel">
+                <span class="counter" data-target="7">0</span>
+                <p>Tahun membangun komunitas</p>
+            </div>
+            <div class="stat-card glass-panel">
+                <span class="counter" data-target="9">0</span>
+                <p>Jejak pencapaian utama</p>
+            </div>
+            <div class="stat-card glass-panel">
+                <span class="counter" data-target="7">0</span>
+                <p>Fokus keahlian digital</p>
+            </div>
+            <div class="stat-card glass-panel">
+                <span class="counter" data-target="100">0</span>
+                <p>Komitmen eksplorasi teknologi</p>
+            </div>
+        </section>
+
+        <section class="section about" id="about">
+            <div class="section-heading reveal">
+                <span class="eyebrow">Tentang Saya</span>
+                <h2>Builder yang bergerak di komunitas, AI, dan sistem digital.</h2>
+            </div>
+            <div class="about-layout">
+                <article class="about-card glass-panel reveal tilt-card">
+                    <p>
+                        Depoizon adalah identitas profesional Nur Riski Firdaus, seorang
+                        builder digital dari Indonesia, Jawa Timur, Madura, Sumenep. Fokusnya
+                        berada pada pengembangan komunitas teknologi, pengelolaan AI,
+                        modifikasi sistem, rekayasa software, cloud hosting, dan pembuatan
+                        tools yang membantu orang bergerak lebih cepat di era digital.
+                    </p>
+                    <p>
+                        Dengan pengalaman membangun beberapa komunitas sejak 2017, Depoizon
+                        memadukan visi sosial, kemampuan teknis, dan rasa ingin tahu terhadap
+                        teknologi masa depan untuk menciptakan sistem yang rapi, adaptif, dan
+                        bernilai.
+                    </p>
+                </article>
+                <div class="identity-grid reveal">
+                    <div class="identity-item glass-panel">
+                        <span>Alias</span>
+                        <strong>Depoizon</strong>
+                    </div>
+                    <div class="identity-item glass-panel">
+                        <span>Nama</span>
+                        <strong>Nur Riski Firdaus</strong>
+                    </div>
+                    <div class="identity-item glass-panel">
+                        <span>Region</span>
+                        <strong>Sumenep, Madura</strong>
+                    </div>
+                    <div class="identity-item glass-panel">
+                        <span>Focus</span>
+                        <strong>AI, Tools, Software, Cloud</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section timeline-section" id="timeline">
+            <div class="section-heading reveal">
+                <span class="eyebrow">Pencapaian</span>
+                <h2>Timeline interaktif dari komunitas sampai sistem digital.</h2>
+            </div>
+            <div class="timeline">
+                <article class="timeline-item glass-panel reveal tilt-card">
+                    <span class="year">2017</span>
+                    <h3>Mulai aktif di ekosistem keamanan siber Indonesia</h3>
+                    <p>Mengenal lebih dalam budaya komunitas, pembelajaran teknis, dan literasi keamanan digital di
+                        tingkat nasional.</p>
+                </article>
+                <article class="timeline-item glass-panel reveal tilt-card">
+                    <span class="year">2017</span>
+                    <h3>Mendalami jaringan komunitas Indonesia Cyber Security</h3>
+                    <p>Memperluas wawasan tentang keamanan sistem, eksplorasi toolset, dan dinamika pembelajaran
+                        berbasis komunitas.</p>
+                </article>
+                <article class="timeline-item glass-panel reveal tilt-card">
+                    <span class="year">2017</span>
+                    <h3>Aktif menjelajahi forum dan kultur riset keamanan</h3>
+                    <p>Membangun rasa ingin tahu terhadap keamanan digital, eksperimen teknis, dan pengembangan
+                        kemampuan problem solving.</p>
+                </article>
+                <article class="timeline-item glass-panel reveal tilt-card">
+                    <span class="year">2017</span>
+                    <h3>Memperluas relasi di komunitas teknologi Indonesia</h3>
+                    <p>Mengikuti berbagai ruang diskusi digital untuk memperkuat koneksi, wawasan teknis, dan jejaring
+                        kolaborasi.</p>
+                </article>
+                <article class="timeline-item glass-panel reveal tilt-card">
+                    <span class="year">2018</span>
+                    <h3>Aktif di komunitas digital bertema keamanan dan eksplorasi sistem</h3>
+                    <p>Menumbuhkan pengalaman komunitas melalui pembelajaran mandiri, eksplorasi Linux, dan kultur
+                        teknologi terbuka.</p>
+                </article>
+                <article class="timeline-item glass-panel reveal tilt-card">
+                    <span class="year">2020</span>
+                    <h3>Mengamati dinamika keamanan platform digital skala besar</h3>
+                    <p>Memperdalam pemahaman terhadap insiden siber, pola ancaman, dan respons ekosistem digital modern.
+                    </p>
+                </article>
+                <article class="timeline-item glass-panel reveal tilt-card">
+                    <span class="year">2020</span>
+                    <h3>Mengikuti diskusi isu keamanan siber lintas negara</h3>
+                    <p>Menelaah dinamika keamanan digital global, pergerakan ancaman, dan pentingnya kesiapan sistem
+                        yang adaptif.</p>
+                </article>
+                <article class="timeline-item glass-panel reveal tilt-card">
+                    <span class="year">2021</span>
+                    <h3>Tertarik pada perlindungan sistem dan pembersihan ekosistem digital</h3>
+                    <p>Memperluas fokus ke arah ketahanan sistem, kebersihan platform, dan pentingnya perlindungan ruang
+                        digital yang sehat.</p>
+                </article>
+                <article class="timeline-item glass-panel reveal tilt-card">
+                    <span class="year">2023</span>
+                    <h3>Mendalami pemodifikasi bot WhatsApp</h3>
+                    <p>Bereksperimen dengan otomasi pesan, modifikasi alur bot, dan pengembangan workflow komunikasi
+                        berbasis sistem.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section skills" id="skills">
+            <div class="section-heading reveal">
+                <span class="eyebrow">Keahlian</span>
+                <h2>Kapasitas teknis dan kepemimpinan digital.</h2>
+            </div>
+            <div class="skills-grid">
+                <article class="skill-card glass-panel reveal tilt-card" data-level="94">
+                    <div class="skill-icon">01</div>
+                    <h3>Pembangun Komunitas</h3>
+                    <p>Menginisiasi, mengelola, dan menumbuhkan ruang kolaborasi berbasis teknologi.</p>
+                    <div class="progress"><span></span></div>
+                </article>
+                <article class="skill-card glass-panel reveal tilt-card" data-level="88">
+                    <div class="skill-icon">02</div>
+                    <h3>Pengelola AI</h3>
+                    <p>Mengatur workflow AI untuk otomasi, eksperimen, dan peningkatan produktivitas.</p>
+                    <div class="progress"><span></span></div>
+                </article>
+                <article class="skill-card glass-panel reveal tilt-card" data-level="90">
+                    <div class="skill-icon">03</div>
+                    <h3>Pemodifikasi Sistem</h3>
+                    <p>Membaca, menyesuaikan, dan mengoptimalkan sistem sesuai kebutuhan pengguna.</p>
+                    <div class="progress"><span></span></div>
+                </article>
+                <article class="skill-card glass-panel reveal tilt-card" data-level="86">
+                    <div class="skill-icon">04</div>
+                    <h3>Rekayasa Software</h3>
+                    <p>Membangun logika aplikasi, struktur digital, dan solusi yang stabil untuk berkembang.</p>
+                    <div class="progress"><span></span></div>
+                </article>
+                <article class="skill-card glass-panel reveal tilt-card" data-level="91">
+                    <div class="skill-icon">05</div>
+                    <h3>Pengembang Tools</h3>
+                    <p>Menciptakan alat bantu digital yang efisien, praktis, dan mudah dipakai.</p>
+                    <div class="progress"><span></span></div>
+                </article>
+                <article class="skill-card glass-panel reveal tilt-card" data-level="89">
+                    <div class="skill-icon">06</div>
+                    <h3>Pendalami AI</h3>
+                    <p>Menjelajahi kecerdasan buatan sebagai fondasi sistem modern yang adaptif.</p>
+                    <div class="progress"><span></span></div>
+                </article>
+                <article class="skill-card glass-panel reveal tilt-card" data-level="87">
+                    <div class="skill-icon">07</div>
+                    <h3>Cloud Hosting</h3>
+                    <p>Mengelola deployment, konfigurasi hosting, domain, dan infrastruktur web agar sistem berjalan
+                        stabil.</p>
+                    <div class="progress"><span></span></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section projects" id="projects">
+            <div class="section-heading reveal">
+                <span class="eyebrow">Proyek & Aktivitas</span>
+                <h2>Portfolio aktivitas yang bergerak dari ide menjadi ekosistem.</h2>
+            </div>
+            <div class="project-grid">
+                <article class="project-card glass-panel reveal tilt-card">
+                    <span class="project-tag">Community System</span>
+                    <h3>Cyber White Hat Indonesia</h3>
+                    <p>Inisiatif komunitas untuk membangun budaya belajar teknologi, etika digital, dan kolaborasi.</p>
+                    <a href="#contact" aria-label="Hubungi untuk Cyber White Hat Indonesia">Hubungi Saya</a>
+                </article>
+                <article class="project-card glass-panel reveal tilt-card">
+                    <span class="project-tag">Linux Culture</span>
+                    <h3>Attacker Kali Linux Mafia</h3>
+                    <p>Ruang eksplorasi teknis untuk sistem Linux, tools, dan pembelajaran keamanan digital.</p>
+                    <a href="#contact" aria-label="Hubungi untuk Attacker Kali Linux Mafia">Hubungi Saya</a>
+                </article>
+                <article class="project-card glass-panel reveal tilt-card">
+                    <span class="project-tag">App Customization</span>
+                    <h3>Modifikasi WhatsApp</h3>
+                    <p>Eksperimen antarmuka dan modifikasi aplikasi untuk pengalaman digital yang lebih personal.</p>
+                    <a href="#contact" aria-label="Hubungi untuk Modifikasi WhatsApp">Hubungi Saya</a>
+                </article>
+                <article class="project-card glass-panel reveal tilt-card">
+                    <span class="project-tag">Game Community</span>
+                    <h3>Stone Life MP5 Online</h3>
+                    <p>Server Minecraft sebagai arena komunitas kreatif, manajemen sistem, dan pengalaman sosial online.
+                    </p>
+                    <a href="#contact" aria-label="Hubungi untuk Stone Life MP5 Online">Hubungi Saya</a>
+                </article>
+                <article class="project-card glass-panel reveal tilt-card">
+                    <span class="project-tag">Cloud Mail System</span>
+                    <h3>Depoizon Web Mail</h3>
+                    <p>Website internal mail berbasis domain Depoizon untuk akses email yang cepat, rapi, dan mudah
+                        dijangkau.</p>
+                    <a href="http://mail.depoizon.my.id/" target="_blank" rel="noopener noreferrer"
+                        aria-label="Buka Depoizon Web Mail">Buka Web Mail</a>
+                </article>
+                <article class="project-card glass-panel reveal tilt-card">
+                    <span class="project-tag">AI Platform</span>
+                    <h3>AI Depoizon</h3>
+                    <p>Eksplorasi platform AI berbasis web untuk workflow modern, eksperimen digital, dan interaksi
+                        sistem yang lebih adaptif.</p>
+                    <a href="https://ai-depoizon.github.io" target="_blank" rel="noopener noreferrer"
+                        aria-label="Buka AI Depoizon">Buka Project</a>
+                </article>
+            </div>
+        </section>
+
+        <section class="section explore" id="explore">
+            <div class="section-heading reveal">
+                <span class="eyebrow">Hobi Real-Life</span>
+                <h2>Menjelajah berbagai tempat, membaca suasana kota, dan menyusun jejak perjalanan dari Madura ke Jawa
+                    Timur.</h2>
+            </div>
+            <div class="explore-layout">
+                <article class="explore-card glass-panel reveal">
+                    <div class="explore-copy">
+                        <span class="explore-tag">Explore Various Places</span>
+                        <h3>Dokumentasi perjalanan real-life yang tampil rapi, hidup, dan tetap selaras dengan nuansa
+                            futuristik website.</h3>
+                        <p>
+                            Selain dunia digital, saya juga senang mengeksplor berbagai tempat di dunia nyata.
+                            Perjalanan ini membentuk sudut pandang, observasi, dan energi baru untuk terus membangun.
+                        </p>
+                    </div>
+                    <div class="route-list">
+                        <span>Sumenep</span>
+                        <span>Surabaya</span>
+                        <span>Sidoarjo</span>
+                        <span>Malang</span>
+                        <span>Pasuruan</span>
+                        <span>Mojokerto</span>
+                        <span>Gresik</span>
+                        <span>Lamongan</span>
+                    </div>
+                </article>
+                <div class="map-card glass-panel reveal tilt-card">
+                    <div class="map-header">
+                        <span class="map-badge">Travel Gallery</span>
+                        <span class="map-meta">10 Real-Life Frames</span>
+                    </div>
+                    <div class="travel-gallery" aria-label="Galeri foto perjalanan Depoizon">
+                        <figure class="travel-shot travel-shot-featured">
+                            <img src="./travel-photo-03.jpg" alt="Dokumentasi perjalanan Depoizon frame utama">
+                            <figcaption>
+                                <span class="travel-shot-index">Featured Frame</span>
+                                <strong>Explore Moment / 03</strong>
+                            </figcaption>
+                        </figure>
+                        <figure class="travel-shot">
+                            <img src="./travel-photo-01.jpg" alt="Dokumentasi perjalanan Depoizon frame 01">
+                            <figcaption><span class="travel-shot-index">Frame 01</span></figcaption>
+                        </figure>
+                        <figure class="travel-shot">
+                            <img src="./travel-photo-02.jpg" alt="Dokumentasi perjalanan Depoizon frame 02">
+                            <figcaption><span class="travel-shot-index">Frame 02</span></figcaption>
+                        </figure>
+                        <figure class="travel-shot">
+                            <img src="./travel-photo-04.jpg" alt="Dokumentasi perjalanan Depoizon frame 04">
+                            <figcaption><span class="travel-shot-index">Frame 04</span></figcaption>
+                        </figure>
+                        <figure class="travel-shot">
+                            <img src="./travel-photo-05.jpg" alt="Dokumentasi perjalanan Depoizon frame 05">
+                            <figcaption><span class="travel-shot-index">Frame 05</span></figcaption>
+                        </figure>
+                        <figure class="travel-shot">
+                            <img src="./travel-photo-06.jpg" alt="Dokumentasi perjalanan Depoizon frame 06">
+                            <figcaption><span class="travel-shot-index">Frame 06</span></figcaption>
+                        </figure>
+                        <figure class="travel-shot">
+                            <img src="./travel-photo-07.jpg" alt="Dokumentasi perjalanan Depoizon frame 07">
+                            <figcaption><span class="travel-shot-index">Frame 07</span></figcaption>
+                        </figure>
+                        <figure class="travel-shot">
+                            <img src="./travel-photo-08.jpg" alt="Dokumentasi perjalanan Depoizon frame 08">
+                            <figcaption><span class="travel-shot-index">Frame 08</span></figcaption>
+                        </figure>
+                        <figure class="travel-shot">
+                            <img src="./travel-photo-09.jpg" alt="Dokumentasi perjalanan Depoizon frame 09">
+                            <figcaption><span class="travel-shot-index">Frame 09</span></figcaption>
+                        </figure>
+                        <figure class="travel-shot">
+                            <img src="./travel-photo-10.jpg" alt="Dokumentasi perjalanan Depoizon frame 10">
+                            <figcaption><span class="travel-shot-index">Frame 10</span></figcaption>
+                        </figure>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section community" id="community">
+            <div class="community-panel glass-panel reveal">
+                <div>
+                    <span class="eyebrow">Komunitas</span>
+                    <h2>Membangun ruang digital yang aktif, kuat, dan terus berkembang.</h2>
+                </div>
+                <p>
+                    Depoizon melihat komunitas sebagai infrastruktur sosial: tempat ide
+                    diuji, kemampuan diasah, dan teknologi menjadi lebih dekat dengan
+                    orang-orang yang ingin bertumbuh.
+                </p>
+                <div class="community-tags">
+                    <span>Leadership</span>
+                    <span>AI Workflow</span>
+                    <span>Cloud Hosting</span>
+                    <span>Tooling</span>
+                    <span>System Design</span>
+                    <span>Digital Culture</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="section contact" id="contact">
+            <div class="section-heading reveal">
+                <span class="eyebrow">Kontak</span>
+                <h2>Siap membangun sesuatu yang modern dan bernilai.</h2>
+            </div>
+            <div class="contact-layout">
+                <div class="contact-card glass-panel reveal tilt-card">
+                    <h3>Mari Terhubung</h3>
+                    <p>
+                        Untuk kolaborasi komunitas, pengembangan tools, eksplorasi AI, atau
+                        sistem digital modern, kirim pesan melalui form ini.
+                    </p>
+                    <div class="contact-profile">
+                        <div class="profile-badge">
+                            <span>D</span>
+                        </div>
+                        <div>
+                            <strong>Depoizon / Nur Riski Firdaus</strong>
+                            <p>Sumenep, Madura, Jawa Timur, Indonesia</p>
+                        </div>
+                    </div>
+                    <div class="contact-links">
+                        <a class="contact-link tooltip-link" href="mailto:uwudepoistn@gmail.com"
+                            data-tooltip="Buka email">
+                            <span class="link-icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M4 6h16v12H4V6Zm0 1 8 6 8-6" />
+                                </svg>
+                            </span>
+                            <span>
+                                <small>Email</small>
+                                <strong>uwudepoistn@gmail.com</strong>
+                            </span>
+                        </a>
+                        <a class="contact-link tooltip-link" href="https://github.com/depoizon" target="_blank"
+                            rel="noopener noreferrer" data-tooltip="Buka GitHub">
+                            <span class="link-icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path
+                                        d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.04 1.53 1.04.9 1.52 2.35 1.08 2.92.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0 1 12 6.01c.85 0 1.7.11 2.5.34 1.9-1.29 2.74-1.02 2.74-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z" />
+                                </svg>
+                            </span>
+                            <span>
+                                <small>GitHub</small>
+                                <strong>github.com/depoizon</strong>
+                            </span>
+                        </a>
+                        <a class="contact-link tooltip-link" href="http://mail.depoizon.my.id/" target="_blank"
+                            rel="noopener noreferrer" data-tooltip="Buka web mail">
+                            <span class="link-icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path
+                                        d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm-8 9h16M12 3c2.2 2.4 3.3 5.4 3.3 9S14.2 18.6 12 21M12 3C9.8 5.4 8.7 8.4 8.7 12s1.1 6.6 3.3 9" />
+                                </svg>
+                            </span>
+                            <span>
+                                <small>Web Mail</small>
+                                <strong>mail.depoizon.my.id</strong>
+                            </span>
+                        </a>
+                        <a class="contact-link tooltip-link" href="https://lynk.id/kyyca" target="_blank"
+                            rel="noopener noreferrer" data-tooltip="Buka toko">
+                            <span class="link-icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M6 8h12l-1 13H7L6 8Zm3 0a3 3 0 0 1 6 0M4 8h16M9 13h6" />
+                                </svg>
+                            </span>
+                            <span>
+                                <small>Toko</small>
+                                <strong>lynk.id/kyyca</strong>
+                            </span>
+                        </a>
+                    </div>
+                    <div class="contact-actions">
+                        <button class="mini-btn copy-email tooltip-link" type="button" data-copy="uwudepoistn@gmail.com"
+                            data-tooltip="Salin email">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8 8h11v13H8V8Zm-3 8H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v1" />
+                            </svg>
+                            <span>Salin Email</span>
+                        </button>
+                        <a class="mini-btn tooltip-link" href="https://github.com/depoizon" target="_blank"
+                            rel="noopener noreferrer" data-tooltip="Tab baru">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M7 17 17 7M9 7h8v8M5 5h6M5 5v14h14v-6" />
+                            </svg>
+                            <span>Buka GitHub</span>
+                        </a>
+                        <a class="mini-btn tooltip-link" href="http://mail.depoizon.my.id/" target="_blank"
+                            rel="noopener noreferrer" data-tooltip="Tab baru">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm-8 9h16M12 3c2.2 2.4 3.3 5.4 3.3 9S14.2 18.6 12 21M12 3C9.8 5.4 8.7 8.4 8.7 12s1.1 6.6 3.3 9" />
+                            </svg>
+                            <span>Buka Web Mail</span>
+                        </a>
+                        <a class="mini-btn tooltip-link" href="https://lynk.id/kyyca" target="_blank"
+                            rel="noopener noreferrer" data-tooltip="Tab baru">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M6 8h12l-1 13H7L6 8Zm3 0a3 3 0 0 1 6 0M4 8h16M9 13h6" />
+                            </svg>
+                            <span>Buka Toko</span>
+                        </a>
+                    </div>
+                    <p class="copy-status" role="status" aria-live="polite"></p>
+                </div>
+                <form class="contact-form glass-panel reveal" id="contactForm">
+                    <label>
+                        <span>Nama</span>
+                        <input type="text" name="name" placeholder="Nama Anda" required>
+                    </label>
+                    <label>
+                        <span>Email</span>
+                        <input type="email" name="email" placeholder="email@domain.com" required>
+                    </label>
+                    <label>
+                        <span>Pesan</span>
+                        <textarea name="message" rows="5" placeholder="Tulis pesan singkat..." required></textarea>
+                    </label>
+                    <button class="btn primary magnetic" type="submit">
+                        <span>Hubungi Saya</span>
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 12 20 4l-5 16-3-7-8-1Z" />
+                        </svg>
+                    </button>
+                    <p class="form-status" role="status" aria-live="polite"></p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner glass-panel">
+            <div class="footer-profile">
+                <strong>Depoizon / Nur Riski Firdaus</strong>
+                <p>Sumenep, Madura, Jawa Timur, Indonesia</p>
+                <p>&copy; <span id="year"></span> Built for the future.</p>
+            </div>
+            <div class="footer-links" aria-label="Footer quick links">
+                <a href="mailto:uwudepoistn@gmail.com">uwudepoistn@gmail.com</a>
+                <a href="https://github.com/depoizon" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="http://mail.depoizon.my.id/" target="_blank" rel="noopener noreferrer">Web Mail</a>
+                <a href="https://lynk.id/kyyca" target="_blank" rel="noopener noreferrer">Toko Saya</a>
+                <a href="#hero">Kembali ke awal</a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" aria-label="Kembali ke atas">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 19V5m0 0-6 6m6-6 6 6" />
+        </svg>
+    </button>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
