@@ -10,6 +10,8 @@ const robot = document.querySelector("#robot");
 const robotStage = document.querySelector("#robotStage");
 const robotCore = document.querySelector("#robotCore");
 const robotStatusText = document.querySelector(".robot-status-text");
+const robotLaserBeam = document.querySelector("#robotLaserBeam");
+const robotLaserImpact = document.querySelector("#robotLaserImpact");
 const greetingLabel = document.querySelector("#greetingLabel");
 const timeLabel = document.querySelector("#timeLabel");
 const dateLabel = document.querySelector("#dateLabel");
@@ -22,9 +24,19 @@ const canvas = document.querySelector("#particleCanvas");
 const ctx = canvas.getContext("2d");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const revealItems = document.querySelectorAll(".reveal, .stat-card, .skill-card");
+const internalAnchors = document.querySelectorAll('a[href^="#"]');
+const deviceMemory = navigator.deviceMemory || 8;
+const hardwareThreads = navigator.hardwareConcurrency || 8;
+const liteMode = prefersReducedMotion || deviceMemory <= 4 || hardwareThreads <= 4 || window.innerWidth < 980;
 let lastScrollY = window.scrollY;
 let scrollDirection = "down";
 let ticking = false;
+let smoothScrollFrame = 0;
+let pointerFrame = 0;
+let latestPointerEvent = null;
+let laserInterval = 0;
+let laserKickoffTimeout = 0;
+let laserCleanupTimeout = 0;
 
 revealItems.forEach((item) => item.classList.add("reveal"));
 revealItems.forEach((item, index) => {
@@ -32,6 +44,7 @@ revealItems.forEach((item, index) => {
 });
 
 body.classList.add("loading");
+body.classList.toggle("performance-lite", liteMode);
 
 window.addEventListener("load", () => {
   setTimeout(() => {
@@ -92,6 +105,57 @@ navAnchors.forEach((anchor) => {
   });
 });
 
+function smoothScrollTo(targetY, duration = 1200) {
+  if (prefersReducedMotion) {
+    window.scrollTo(0, targetY);
+    return;
+  }
+
+  const startY = window.scrollY;
+  const distance = targetY - startY;
+  const maxY = Math.max(document.documentElement.scrollHeight - window.innerHeight, 0);
+  const finalY = clamp(targetY, 0, maxY);
+  const startTime = performance.now();
+
+  cancelAnimationFrame(smoothScrollFrame);
+
+  function easeInOutCubic(value) {
+    return value < 0.5
+      ? 4 * value * value * value
+      : 1 - Math.pow(-2 * value + 2, 3) / 2;
+  }
+
+  function step(now) {
+    const progress = Math.min((now - startTime) / duration, 1);
+    const eased = easeInOutCubic(progress);
+    window.scrollTo(0, startY + (finalY - startY) * eased);
+
+    if (progress < 1) {
+      smoothScrollFrame = requestAnimationFrame(step);
+    }
+  }
+
+  smoothScrollFrame = requestAnimationFrame(step);
+}
+
+internalAnchors.forEach((anchor) => {
+  anchor.addEventListener("click", (event) => {
+    const href = anchor.getAttribute("href");
+    if (!href || href === "#" || href.length < 2) return;
+
+    const target = document.querySelector(href);
+    if (!target) return;
+
+    event.preventDefault();
+    const navbarHeight = document.querySelector(".navbar")?.offsetHeight || 68;
+    const topOffset = Math.max(navbarHeight + 26, 92);
+    const targetY = target.getBoundingClientRect().top + window.scrollY - topOffset;
+
+    smoothScrollTo(targetY, 1180);
+    window.history.replaceState(null, "", href);
+  });
+});
+
 function triggerRevealEffects(item) {
   if (item.classList.contains("skill-card") && !item.dataset.progressDone) {
     const level = item.dataset.level || 0;
@@ -108,15 +172,15 @@ function triggerRevealEffects(item) {
 
 function updateRevealStates() {
   const viewportHeight = window.innerHeight;
-  const enterStart = viewportHeight * 0.88;
-  const enterEnd = viewportHeight * 0.14;
+  const enterStart = viewportHeight * 0.9;
+  const enterEnd = viewportHeight * 0.1;
   let visibleOrder = 0;
 
   revealItems.forEach((item) => {
     const rect = item.getBoundingClientRect();
     const wasVisible = item.classList.contains("visible");
-    const visibleTopThreshold = wasVisible ? viewportHeight * 0.94 : enterStart;
-    const visibleBottomThreshold = wasVisible ? viewportHeight * 0.06 : enterEnd;
+    const visibleTopThreshold = wasVisible ? viewportHeight * 0.97 : enterStart;
+    const visibleBottomThreshold = wasVisible ? viewportHeight * 0.03 : enterEnd;
     const isVisible = rect.top < visibleTopThreshold && rect.bottom > visibleBottomThreshold;
 
     item.classList.remove("exit-up", "exit-down");
@@ -134,7 +198,9 @@ function updateRevealStates() {
     item.classList.remove("enter-from-top");
 
     if (rect.top >= viewportHeight) {
-      item.classList.add(scrollDirection === "up" ? "exit-up" : "exit-down");
+      if (scrollDirection === "up") {
+        item.classList.add("exit-up");
+      }
       return;
     }
 
@@ -211,11 +277,26 @@ let pointer = {
 };
 
 window.addEventListener("pointermove", (event) => {
-  pointer.x = event.clientX;
-  pointer.y = event.clientY;
-  updateCursor(event.clientX, event.clientY);
-  updateRobotLook(event.clientX, event.clientY);
-});
+  latestPointerEvent = event;
+
+  if (pointerFrame) return;
+  pointerFrame = window.requestAnimationFrame(() => {
+    if (!latestPointerEvent) {
+      pointerFrame = 0;
+      return;
+    }
+
+    pointer.x = latestPointerEvent.clientX;
+    pointer.y = latestPointerEvent.clientY;
+
+    if (!liteMode) {
+      updateCursor(latestPointerEvent.clientX, latestPointerEvent.clientY);
+    }
+
+    updateRobotLook(latestPointerEvent.clientX, latestPointerEvent.clientY);
+    pointerFrame = 0;
+  });
+}, { passive: true });
 
 window.addEventListener("touchmove", (event) => {
   const touch = event.touches[0];
@@ -226,7 +307,7 @@ window.addEventListener("touchmove", (event) => {
 }, { passive: true });
 
 function updateCursor(x, y) {
-  if (window.innerWidth <= 760) return;
+  if (window.innerWidth <= 760 || liteMode) return;
   cursorDot.style.opacity = "1";
   cursorRing.style.opacity = "1";
   cursorDot.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
@@ -273,6 +354,65 @@ function getRobotStatusText() {
     : "Digital Assistant Online";
 }
 
+function clearLaserCycle() {
+  window.clearInterval(laserInterval);
+  window.clearTimeout(laserKickoffTimeout);
+  window.clearTimeout(laserCleanupTimeout);
+  laserInterval = 0;
+  laserKickoffTimeout = 0;
+  laserCleanupTimeout = 0;
+  robotLaserBeam?.classList.remove("active");
+  robotLaserImpact?.classList.remove("active");
+}
+
+function fireRobotLaser() {
+  if (!body.classList.contains("robot-angry") || !robotStage || !robotLaserBeam || !robotLaserImpact) return;
+
+  const face = robot.querySelector(".robot-face");
+  if (!face) return;
+
+  const stageRect = robotStage.getBoundingClientRect();
+  const faceRect = face.getBoundingClientRect();
+  const sourceX = faceRect.left - stageRect.left + faceRect.width / 2;
+  const sourceY = faceRect.top - stageRect.top + faceRect.height * 0.58;
+  const targetX = clamp(pointer.x - stageRect.left, 22, stageRect.width - 22);
+  const targetY = clamp(pointer.y - stageRect.top, 22, stageRect.height - 22);
+  const dx = targetX - sourceX;
+  const dy = targetY - sourceY;
+  const distance = Math.max(Math.hypot(dx, dy), 12);
+  const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+  robotLaserBeam.style.left = `${sourceX}px`;
+  robotLaserBeam.style.top = `${sourceY}px`;
+  robotLaserBeam.style.width = `${distance}px`;
+  robotLaserBeam.style.transform = `translateY(-50%) rotate(${angle}deg)`;
+
+  robotLaserImpact.style.left = `${targetX}px`;
+  robotLaserImpact.style.top = `${targetY}px`;
+
+  robotLaserBeam.classList.remove("active");
+  robotLaserImpact.classList.remove("active");
+  void robotLaserBeam.offsetWidth;
+  robotLaserBeam.classList.add("active");
+  robotLaserImpact.classList.add("active");
+
+  window.clearTimeout(laserCleanupTimeout);
+  laserCleanupTimeout = window.setTimeout(() => {
+    robotLaserBeam.classList.remove("active");
+    robotLaserImpact.classList.remove("active");
+  }, 820);
+}
+
+function syncAngryLaserMode(isAngry) {
+  clearLaserCycle();
+  if (!isAngry) return;
+
+  laserKickoffTimeout = window.setTimeout(() => {
+    fireRobotLaser();
+    laserInterval = window.setInterval(fireRobotLaser, 5000);
+  }, 900);
+}
+
 robotCore.addEventListener("click", () => {
   window.clearTimeout(coreTapTimer);
   coreTapCount += 1;
@@ -282,6 +422,7 @@ robotCore.addEventListener("click", () => {
     robotCore.setAttribute("aria-pressed", String(isAngry));
     robotStatusText.textContent = getRobotStatusText();
     robot.classList.add("angry-burst");
+    syncAngryLaserMode(isAngry);
     window.setTimeout(() => robot.classList.remove("angry-burst"), 520);
     coreTapCount = 0;
     return;
@@ -299,7 +440,7 @@ robotCore.addEventListener("click", () => {
 
 document.querySelectorAll(".tilt-card").forEach((card) => {
   card.addEventListener("pointermove", (event) => {
-    if (prefersReducedMotion || window.innerWidth < 760) return;
+    if (prefersReducedMotion || liteMode || window.innerWidth < 760) return;
     const rect = card.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
@@ -321,7 +462,7 @@ document.querySelectorAll(".magnetic").forEach((button) => {
     button.style.setProperty("--x", `${x}px`);
     button.style.setProperty("--y", `${y}px`);
 
-    if (prefersReducedMotion || window.innerWidth < 760) return;
+    if (prefersReducedMotion || liteMode || window.innerWidth < 760) return;
     const moveX = (x - rect.width / 2) * 0.08;
     const moveY = (y - rect.height / 2) * 0.08;
     button.style.transform = `translate(${moveX}px, ${moveY - 3}px)`;
@@ -335,20 +476,24 @@ document.querySelectorAll(".magnetic").forEach((button) => {
 const sectionObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
+      entry.target.classList.toggle("section-active", entry.isIntersecting);
       if (!entry.isIntersecting) return;
       navAnchors.forEach((anchor) => {
         anchor.classList.toggle("active", anchor.getAttribute("href") === `#${entry.target.id}`);
       });
     });
   },
-  { threshold: 0.38 }
+  { threshold: 0.38, rootMargin: "-10% 0px -16% 0px" }
 );
 
 sections.forEach((section) => sectionObserver.observe(section));
 
 window.addEventListener("scroll", () => {
   const y = window.scrollY;
-  scrollDirection = y > lastScrollY ? "down" : "up";
+  const delta = y - lastScrollY;
+  if (Math.abs(delta) > 2) {
+    scrollDirection = delta > 0 ? "down" : "up";
+  }
   lastScrollY = y;
   backToTop.classList.toggle("visible", y > 700);
   root.style.setProperty("--scroll", y);
@@ -363,7 +508,7 @@ window.addEventListener("scroll", () => {
 }, { passive: true });
 
 backToTop.addEventListener("click", () => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  smoothScrollTo(0, 1100);
 });
 
 document.querySelector("#contactForm").addEventListener("submit", (event) => {
@@ -418,6 +563,12 @@ let canvasWidth = 0;
 let canvasHeight = 0;
 
 function resizeCanvas() {
+  if (liteMode) {
+    canvas.style.display = "none";
+    particles = [];
+    return;
+  }
+
   const ratio = Math.min(window.devicePixelRatio || 1, 2);
   canvasWidth = window.innerWidth;
   canvasHeight = window.innerHeight;
@@ -430,18 +581,20 @@ function resizeCanvas() {
 }
 
 function createParticles() {
-  const count = Math.min(Math.floor((canvasWidth * canvasHeight) / 18000), 82);
+  const count = Math.min(Math.floor((canvasWidth * canvasHeight) / 26000), 48);
   particles = Array.from({ length: count }, () => ({
     x: Math.random() * canvasWidth,
     y: Math.random() * canvasHeight,
-    vx: (Math.random() - 0.5) * 0.35,
-    vy: (Math.random() - 0.5) * 0.35,
-    radius: Math.random() * 1.9 + 0.8,
-    alpha: Math.random() * 0.55 + 0.18,
+    vx: (Math.random() - 0.5) * 0.26,
+    vy: (Math.random() - 0.5) * 0.26,
+    radius: Math.random() * 1.5 + 0.7,
+    alpha: Math.random() * 0.42 + 0.14,
   }));
 }
 
 function drawParticles() {
+  if (liteMode) return;
+
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   const angryMode = body.classList.contains("robot-angry");
   const particleColor = angryMode ? "255, 82, 82" : "96, 219, 255";
@@ -453,9 +606,9 @@ function drawParticles() {
     particle.y += particle.vy;
 
     const pointerDistance = Math.hypot(pointer.x - particle.x, pointer.y - particle.y);
-    if (pointerDistance < 130) {
-      particle.x -= (pointer.x - particle.x) * 0.003;
-      particle.y -= (pointer.y - particle.y) * 0.003;
+    if (pointerDistance < 110) {
+      particle.x -= (pointer.x - particle.x) * 0.002;
+      particle.y -= (pointer.y - particle.y) * 0.002;
     }
 
     if (particle.x < 0 || particle.x > canvasWidth) particle.vx *= -1;
@@ -465,18 +618,18 @@ function drawParticles() {
     ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
     ctx.fillStyle = `rgba(${particleColor}, ${particle.alpha})`;
     ctx.shadowColor = particleGlow;
-    ctx.shadowBlur = 12;
+    ctx.shadowBlur = 8;
     ctx.fill();
     ctx.shadowBlur = 0;
 
     for (let next = index + 1; next < particles.length; next += 1) {
       const other = particles[next];
       const distance = Math.hypot(particle.x - other.x, particle.y - other.y);
-      if (distance > 120) continue;
+      if (distance > 96) continue;
       ctx.beginPath();
       ctx.moveTo(particle.x, particle.y);
       ctx.lineTo(other.x, other.y);
-      ctx.strokeStyle = `rgba(${lineColor}, ${0.13 * (1 - distance / 120)})`;
+      ctx.strokeStyle = `rgba(${lineColor}, ${0.09 * (1 - distance / 96)})`;
       ctx.lineWidth = 1;
       ctx.stroke();
     }
